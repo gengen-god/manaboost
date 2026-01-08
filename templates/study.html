@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>学習中 | ManaBoost</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="container">
+
+  <h2>強制学習モード</h2>
+
+  <!-- 進捗（連続正解） -->
+  <div class="streak-wrap">
+    <div class="streak-top">
+      <span class="streak-label">解除まで</span>
+      <span class="streak-count">{{ streak }} / {{ required }}</span>
+    </div>
+
+    <div class="progress">
+      <!-- width をパーセンテージで計算 -->
+      <div class="progress-bar"
+           style="width: {{ (streak * 100 // required) if required else 0 }}%;">
+      </div>
+    </div>
+
+    <div class="streak-sub">
+      {% if streak == 0 %}
+        まずは1問正解しよう
+      {% elif streak < required %}
+        あと {{ required - streak }} 問
+      {% else %}
+        解除条件達成！
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- 正解/不正解メッセージ -->
+  {% if success %}
+    <p class="msg msg-success">{{ success }}</p>
+  {% endif %}
+  {% if error %}
+    <p class="msg msg-error">{{ error }}</p>
+  {% endif %}
+
+  {% if title %}
+    <p class="subtitle">{{ title }}</p>
+  {% endif %}
+
+  <!-- タイマー -->
+  <div class="timer" id="timer">30:00</div>
+
+  <h3>今日の学習動画</h3>
+  <div class="video-wrap">
+    <iframe
+        width="560"
+        height="315"
+        src="https://www.youtube.com/embed/{{ video_id }}"
+        frameborder="0"
+        allowfullscreen>
+    </iframe>
+  </div>
+
+  <h3>小テスト（4択）</h3>
+  <p class="question">{{ question }}</p>
+
+  <form action="/quiz" method="post" class="quiz-form">
+    {% for key, text in choices.items() %}
+      <label class="choice">
+        <input type="radio" name="choice" value="{{ key }}" required>
+        <span class="choice-key">{{ key }}.</span>
+        <span class="choice-text">{{ text }}</span>
+      </label>
+    {% endfor %}
+
+    <div class="center">
+      <button type="submit" class="btn">解答する</button>
+    </div>
+  </form>
+
+</div>
+
+<script>
+let time = 30 * 60;
+setInterval(() => {
+  let min = Math.floor(time / 60);
+  let sec = time % 60;
+
+  document.getElementById("timer").innerText =
+    min + ":" + String(sec).padStart(2, "0");
+
+  if (time === 0) window.location.href = "/break";
+  time--;
+}, 1000);
+</script>
+</body>
+</html>

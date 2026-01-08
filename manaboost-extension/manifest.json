@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "ManaBoost",
+  "version": "1.1",
+  "description": "勉強完了まで娯楽サイトを封印し、合格で一定時間だけ解除します。",
+  "permissions": ["tabs", "storage"],
+  "host_permissions": [
+    "*://www.youtube.com/*",
+    "*://twitter.com/*",
+    "*://x.com/*",
+    "*://www.instagram.com/*",
+    "http://127.0.0.1:5000/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
+}

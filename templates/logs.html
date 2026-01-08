@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>ログ | ManaBoost</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="container">
+  <h2>学習ログ（最新50件）</h2>
+
+  <table border="1" cellpadding="6" cellspacing="0">
+    <tr>
+      <th>時刻</th>
+      <th>イベント</th>
+      <th>動画</th>
+      <th>選択</th>
+      <th>正解</th>
+      <th>正誤</th>
+      <th>連続</th>
+    </tr>
+
+    {% for r in rows %}
+    <tr>
+      <td>{{ r["ts"] }}</td>
+      <td>{{ r["event"] }}</td>
+      <td>{{ r["video_title"] or r["video_id"] }}</td>
+      <td>{{ r["selected"] }}</td>
+      <td>{{ r["correct_answer"] }}</td>
+      <td>
+        {% if r["is_correct"] is none %}
+          -
+        {% elif r["is_correct"] == 1 %}
+          ○
+        {% else %}
+          ×
+        {% endif %}
+      </td>
+      <td>{{ r["streak_after"] }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+
+  <p style="margin-top:20px;">
+    <a href="/study">学習へ戻る</a>
+  </p>
+</div>
+</body>
+</html>
